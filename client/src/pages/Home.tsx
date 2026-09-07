@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { ArrowRight, Heart, Leaf, Menu, Minus, Plus, Search, ShoppingBag, Sprout, X } from "lucide-react";
-
+import { homeImages } from "../imageData";
 export type Product = { id:number; name:string; price:number; original?:number; note:string; image:string; category:string; details:string };
 export const products: Product[] = [
   { id:1, name:"Bi-Fold Wallet", price:1499, original:1699, note:"Classic form. Timeless utility.", category:"Wallets", image:"https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=1000&q=88", details:"A considered everyday wallet made with our plantable material blend, finished by hand in small batches." },
@@ -21,14 +21,266 @@ export default function Home(){
  const add=(p:Product)=>{setCart(c=>[...c,p]);setSelected(null);setCartOpen(true);setToast(`${p.name} added to your bag`)};
  const go=(id:string)=>document.querySelector(id)?.scrollIntoView({behavior:"smooth"});
  return <div className="site-shell"><header className="site-header"><button className="brand-mark" onClick={()=>window.scrollTo({top:0,behavior:"smooth"})}><span>KOSH</span><em>Imperial</em></button><nav className="desktop-nav"><button onClick={()=>navigate("/shop")}>Shop</button><button onClick={()=>navigate("/collections")}>Collections</button><button onClick={()=>go("#values")}>Sustainability</button><button onClick={()=>go("#story")}>Our story</button><button onClick={()=>go("#journal")}>Journal</button></nav><div className="header-actions"><button className="icon-button" onClick={()=>setSearchOpen(v=>!v)} aria-label="Search"><Search size={20}/></button><button className="icon-button account-button" onClick={()=>setToast("Account access is coming soon")} aria-label="Account">◯</button><button className="bag-button" onClick={()=>setCartOpen(true)} aria-label="Open bag"><ShoppingBag size={19}/>{cart.length>0&&<span>{cart.length}</span>}</button><button className="mobile-menu-button" onClick={()=>setMenuOpen(true)}><Menu size={22}/></button></div></header>{searchOpen&&<div className="search-bar-wrap"><Search size={18}/><input autoFocus placeholder="Search the KOSH edit..."/><button onClick={()=>setSearchOpen(false)}><X size={18}/></button></div>}
- <main>
-  <section className="home-hero" style={{backgroundImage:"linear-gradient(90deg,rgba(247,246,228,.98) 0%,rgba(247,246,228,.9) 43%,rgba(247,246,228,.08) 70%),url(https://images.unsplash.com/photo-1509660933844-6910e12765a0?auto=format&fit=crop&w=1800&q=88)"}}><div><p className="eyebrow dark-eyebrow">KOSH IMPERIAL — LUXURY ECO-CRAFT</p><h1>Carry something<br/><em>that can return.</em></h1><p>Thoughtfully designed for today. Responsibly made for a better tomorrow.</p><button className="dark-button" onClick={()=>navigate("/shop")}>Explore collection <ArrowRight size={16}/></button></div><div className="home-hotspots"><button onClick={()=>go("#story")}><Leaf size={18}/><span>Sustainable<br/>materials</span></button><button onClick={()=>go("#story")}><Sprout size={18}/><span>Crafted with<br/>purpose</span></button></div></section>
-  <section className="home-split" id="story"><div className="home-split-copy"><p className="kicker">THE KOSH WAY</p><h2>Crafted gently<br/>in <em>KOSH Imperial.</em></h2><p>Every stitch, every edge, every detail is made with intention. Inspired by nature, made to reduce impact.</p><button className="text-link" onClick={()=>go("#craft")}>Our craftsmanship <ArrowRight size={16}/></button></div><div className="home-split-image" style={{backgroundImage:"url(https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=1400&q=88)"}}/></section>
-  <section className="home-craft" id="craft"><div className="home-craft-image" style={{backgroundImage:"url(https://images.unsplash.com/photo-1556760544-74068565f05c?auto=format&fit=crop&w=1400&q=88)"}}/><div className="home-craft-copy"><p className="kicker sage-kicker">THE DETAIL IS THE DIFFERENCE</p><h2>Made with<br/><em>attention to detail.</em></h2><p>True quality lives in the details you feel but don’t always see. That’s why we obsess over every stitch.</p><button className="light-button" onClick={()=>setToast("Our craft story is coming soon")}>See how we craft <ArrowRight size={16}/></button><div className="detail-list"><span><Leaf size={16}/>Sustainable<br/>Materials</span><span><Sprout size={16}/>Thoughtful<br/>Design</span><span><Heart size={16}/>Handcrafted<br/>with Care</span><span>◇ Built to<br/>Last</span></div></div></section>
-  <section className="fresh-section" id="journal"><div className="section-heading-row"><div><p className="kicker light-kicker">THE LATEST EDIT</p><h2>Fresh collection</h2></div><button className="light-text-link" onClick={()=>navigate("/shop#collection")}>View all collection <ArrowRight size={16}/></button></div><div className="fresh-grid">{products.slice(0,4).map(p=><button className="fresh-card" key={p.id} onClick={()=>setSelected(p)}><img src={p.image} alt={p.name}/><span>{p.name}</span><strong>{formatPrice(p.price)}</strong><small>Quick view <ArrowRight size={13}/></small></button>)}</div></section>
-  <section className="values-section" id="values"><div className="section-intro centered-intro"><p className="kicker">THE WHY BEHIND THE OBJECT</p><h2>Vision and values</h2><p>We believe the things we carry should carry a little more meaning, too.</p></div><div className="value-pillars"><span><Leaf size={20}/><b>Eco-friendly</b></span><span><Sprout size={20}/><b>Ethical craftsmanship</b></span><span><span className="sun-symbol">◌</span><b>Sustainability</b></span><span><Heart size={20}/><b>Positive impact</b></span></div><div className="vision-grid"><div><h3>◉ Vision</h3><p>To be India’s leading eco-friendly wallet brand, inspiring conscious choices for people and the planet.</p></div><div><h3>◎ Mission</h3><p>To create durable, sustainable wallets that combine timeless design with minimal environmental impact.</p></div></div></section>
-  <section className="home-footer-banner"><div><p className="kicker sage-kicker">KOSH IMPERIAL</p><h2>Good for you.<br/><em>Better for the planet.</em></h2><button className="light-button" onClick={()=>navigate("/shop")}>Shop collection <ArrowRight size={16}/></button></div></section>
- </main><footer className="site-footer"><div className="footer-main"><div><button className="brand-mark footer-brand"><span>KOSH</span><em>Imperial</em></button><p>Crafted for today.<br/>Designed for tomorrow.</p></div><div><h4>Explore</h4><button onClick={()=>navigate("/shop")}>Shop</button><button onClick={()=>navigate("/collections")}>Collections</button><button onClick={()=>go("#story")}>Our story</button></div><div><h4>Care</h4><button onClick={()=>setToast("Shipping guide coming soon")}>Shipping & delivery</button><button onClick={()=>setToast("Returns guide coming soon")}>Returns & exchanges</button></div><div className="newsletter"><h4>Join our community</h4><p>Updates on new drops and our journey towards a better tomorrow.</p><form onSubmit={e=>{e.preventDefault();setToast("Welcome to the KOSH circle")}}><input type="email" required placeholder="Your email"/><button><ArrowRight size={16}/></button></form></div></div><div className="footer-bottom"><span>© 2026 KOSH Imperial</span><span>Luxury Eco-Craft. Crafted to grow life.</span></div></footer>
+<main>
+  <section
+    className="home-hero"
+    style={{
+      backgroundImage: `linear-gradient(
+        90deg,
+        rgba(247, 246, 228, 0.98) 0%,
+        rgba(247, 246, 228, 0.9) 43%,
+        rgba(247, 246, 228, 0.08) 70%
+      ), url("${homeImages.hero}")`,
+    }}
+  >
+    <div>
+      <p className="eyebrow dark-eyebrow">
+        KOSH IMPERIAL — LUXURY ECO-CRAFT
+      </p>
+
+      <h1>
+        Carry something
+        <br />
+        <em>that can return.</em>
+      </h1>
+
+      <p>
+        Thoughtfully designed for today. Responsibly made for a better
+        tomorrow.
+      </p>
+
+      <button
+        className="dark-button"
+        onClick={() => navigate("/shop")}
+      >
+        Explore collection <ArrowRight size={16} />
+      </button>
+    </div>
+
+    <div className="home-hotspots">
+      <button onClick={() => go("#story")}>
+        <Leaf size={18} />
+        <span>
+          Sustainable
+          <br />
+          materials
+        </span>
+      </button>
+
+      <button onClick={() => go("#story")}>
+        <Sprout size={18} />
+        <span>
+          Crafted with
+          <br />
+          purpose
+        </span>
+      </button>
+    </div>
+  </section>
+
+  <section className="home-split" id="story">
+    <div className="home-split-copy">
+      <p className="kicker">THE KOSH WAY</p>
+
+      <h2>
+        Crafted gently
+        <br />
+        in <em>KOSH Imperial.</em>
+      </h2>
+
+      <p>
+        Every stitch, every edge, every detail is made with intention.
+        Inspired by nature, made to reduce impact.
+      </p>
+
+      <button
+        className="text-link"
+        onClick={() => go("#craft")}
+      >
+        Our craftsmanship <ArrowRight size={16} />
+      </button>
+    </div>
+
+    <div
+      className="home-split-image"
+      style={{
+        backgroundImage: `url("${homeImages.split}")`,
+      }}
+    />
+  </section>
+
+  <section className="home-craft" id="craft">
+    <div
+      className="home-craft-image"
+      style={{
+        backgroundImage: `url("${homeImages.craft}")`,
+      }}
+    />
+
+    <div className="home-craft-copy">
+      <p className="kicker sage-kicker">
+        THE DETAIL IS THE DIFFERENCE
+      </p>
+
+      <h2>
+        Made with
+        <br />
+        <em>attention to detail.</em>
+      </h2>
+
+      <p>
+        True quality lives in the details you feel but don’t always see.
+        That’s why we obsess over every stitch.
+      </p>
+
+      <button
+        className="light-button"
+        onClick={() => setToast("Our craft story is coming soon")}
+      >
+        See how we craft <ArrowRight size={16} />
+      </button>
+
+      <div className="detail-list">
+        <span>
+          <Leaf size={16} />
+          Sustainable
+          <br />
+          Materials
+        </span>
+
+        <span>
+          <Sprout size={16} />
+          Thoughtful
+          <br />
+          Design
+        </span>
+
+        <span>
+          <Heart size={16} />
+          Handcrafted
+          <br />
+          with Care
+        </span>
+
+        <span>
+          ◇ Built to
+          <br />
+          Last
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <section className="fresh-section" id="journal">
+    <div className="section-heading-row">
+      <div>
+        <p className="kicker light-kicker">THE LATEST EDIT</p>
+        <h2>Fresh collection</h2>
+      </div>
+
+      <button
+        className="light-text-link"
+        onClick={() => navigate("/shop#collection")}
+      >
+        View all collection <ArrowRight size={16} />
+      </button>
+    </div>
+
+    <div className="fresh-grid">
+      {products.slice(0, 4).map((p) => (
+        <button
+          className="fresh-card"
+          key={p.id}
+          onClick={() => setSelected(p)}
+        >
+          <img src={p.image} alt={p.name} />
+          <span>{p.name}</span>
+          <strong>{formatPrice(p.price)}</strong>
+          <small>
+            Quick view <ArrowRight size={13} />
+          </small>
+        </button>
+      ))}
+    </div>
+  </section>
+
+  <section className="values-section" id="values">
+    <div className="section-intro centered-intro">
+      <p className="kicker">THE WHY BEHIND THE OBJECT</p>
+
+      <h2>Vision and values</h2>
+
+      <p>
+        We believe the things we carry should carry a little more
+        meaning, too.
+      </p>
+    </div>
+
+    <div className="value-pillars">
+      <span>
+        <Leaf size={20} />
+        <b>Eco-friendly</b>
+      </span>
+
+      <span>
+        <Sprout size={20} />
+        <b>Ethical craftsmanship</b>
+      </span>
+
+      <span>
+        <span className="sun-symbol">◌</span>
+        <b>Sustainability</b>
+      </span>
+
+      <span>
+        <Heart size={20} />
+        <b>Positive impact</b>
+      </span>
+    </div>
+
+    <div className="vision-grid">
+      <div>
+        <h3>◉ Vision</h3>
+        <p>
+          To be India’s leading eco-friendly wallet brand, inspiring
+          conscious choices for people and the planet.
+        </p>
+      </div>
+
+      <div>
+        <h3>◎ Mission</h3>
+        <p>
+          To create durable, sustainable wallets that combine timeless
+          design with minimal environmental impact.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section
+    className="home-footer-banner"
+    style={{
+      backgroundImage: `url("${homeImages.footerBanner}")`,
+    }}
+  >
+    <div>
+      <p className="kicker sage-kicker">KOSH IMPERIAL</p>
+
+      <h2>
+        Good for you.
+        <br />
+        <em>Better for the planet.</em>
+      </h2>
+
+      <button
+        className="light-button"
+        onClick={() => navigate("/shop")}
+      >
+        Shop collection <ArrowRight size={16} />
+      </button>
+    </div>
+  </section>
+</main><footer className="site-footer"><div className="footer-main"><div><button className="brand-mark footer-brand"><span>KOSH</span><em>Imperial</em></button><p>Crafted for today.<br/>Designed for tomorrow.</p></div><div><h4>Explore</h4><button onClick={()=>navigate("/shop")}>Shop</button><button onClick={()=>navigate("/collections")}>Collections</button><button onClick={()=>go("#story")}>Our story</button></div><div><h4>Care</h4><button onClick={()=>setToast("Shipping guide coming soon")}>Shipping & delivery</button><button onClick={()=>setToast("Returns guide coming soon")}>Returns & exchanges</button></div><div className="newsletter"><h4>Join our community</h4><p>Updates on new drops and our journey towards a better tomorrow.</p><form onSubmit={e=>{e.preventDefault();setToast("Welcome to the KOSH circle")}}><input type="email" required placeholder="Your email"/><button><ArrowRight size={16}/></button></form></div></div><div className="footer-bottom"><span>© 2026 KOSH Imperial</span><span>Luxury Eco-Craft. Crafted to grow life.</span></div></footer>
  {selected&&<div className="overlay" onMouseDown={e=>{if(e.target===e.currentTarget)setSelected(null)}}><div className="product-dialog"><button className="dialog-close" onClick={()=>setSelected(null)}><X size={20}/></button><div className="dialog-image"><img src={selected.image} alt={selected.name}/><span className="dialog-tag">Plantable material</span></div><div className="dialog-details"><p className="kicker">{selected.category} / KOSH IMPERIAL</p><h2>KOSH {selected.name}</h2><div className="dialog-price">{formatPrice(selected.price)}</div><p>{selected.details}</p><div className="dialog-rule"/><div className="dialog-facts"><span><b>Material</b>Plantable blend</span><span><b>Finish</b>Hand-finished</span><span><b>Made in</b>India</span><span><b>Care</b>Wipe gently</span></div><button className="add-button" onClick={()=>add(selected)}>Add to bag <span>{formatPrice(selected.price)}</span></button></div></div></div>}
  {cartOpen&&<div className="overlay drawer-overlay" onMouseDown={e=>{if(e.target===e.currentTarget)setCartOpen(false)}}><aside className="cart-drawer"><div className="drawer-heading"><div><p className="kicker">YOUR KOSH BAG</p><h2>{cart.length} pieces</h2></div><button className="dialog-close" onClick={()=>setCartOpen(false)}><X size={20}/></button></div>{cart.length===0?<div className="empty-bag"><ShoppingBag size={28}/><h3>Your bag is waiting.</h3><button className="dark-button" onClick={()=>{setCartOpen(false);navigate("/shop")}}>Explore collection <ArrowRight size={16}/></button></div>:<><div className="drawer-items">{cart.map((p,i)=><div className="drawer-item" key={`${p.id}-${i}`}><img src={p.image} alt=""/><div><strong>{p.name}</strong><p>{formatPrice(p.price)}</p><button onClick={()=>setCart(c=>c.filter((_,j)=>j!==i))}>Remove</button></div></div>)}</div><div className="drawer-summary"><div><span>Subtotal</span><strong>{formatPrice(cart.reduce((s,p)=>s+p.price,0))}</strong></div><button className="add-button" onClick={()=>setToast("Checkout is coming soon")}>Proceed to checkout <ArrowRight size={16}/></button></div></>}</aside></div>}
  {menuOpen&&<div className="mobile-menu-overlay" onClick={()=>setMenuOpen(false)}><div className="mobile-menu" onClick={e=>e.stopPropagation()}><div className="drawer-heading"><button className="brand-mark"><span>KOSH</span><em>Imperial</em></button><button className="dialog-close" onClick={()=>setMenuOpen(false)}><X size={20}/></button></div><nav><button onClick={()=>{setMenuOpen(false);navigate("/shop")}}>Shop <ArrowRight size={16}/></button><button onClick={()=>{setMenuOpen(false);navigate("/collections")}}>Collections <ArrowRight size={16}/></button><button onClick={()=>{setMenuOpen(false);go("#values")}}>Sustainability <ArrowRight size={16}/></button><button onClick={()=>{setMenuOpen(false);go("#story")}}>Our story <ArrowRight size={16}/></button></nav></div></div>}{toast&&<div className="toast">{toast}</div>}</div>;

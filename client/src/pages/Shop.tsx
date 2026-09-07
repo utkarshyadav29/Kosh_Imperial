@@ -2,14 +2,102 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "wouter";
 import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight, Heart, Leaf, Plus, Search, ShoppingBag, Sprout, Target, X } from "lucide-react";
 import { products, type Product } from "./Home";
+import { shopImages } from "../imageData";
 const price=(p:number)=>`₹ ${p.toLocaleString("en-IN")}`;
-const slides=[{badge:"Eco-friendly wallets",title:"The life of a wallet.",sub:"Thoughtfully designed for today. Made to return to nature.",cta:"Explore Collection",img:"https://images.unsplash.com/photo-1509660933844-6910e12765a0?auto=format&fit=crop&w=1800&q=88"},{badge:"100% Plantable Bio-Leather",title:"Made from nature. Return to nature.",sub:"Crafted using natural fibers and plantable material that honors the earth.",cta:"Our Materials",img:"https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=1800&q=88"},{badge:"Artisanal Craftsmanship",title:"Thoughtful in every stitch.",sub:"Handcrafted by third-generation artisans who care in every detail.",cta:"Our Craft",img:"https://images.unsplash.com/photo-1556760544-74068565f05c?auto=format&fit=crop&w=1800&q=88"}];
-export default function Shop(){const [,navigate]=useLocation();const [slide,setSlide]=useState(0);const [selected,setSelected]=useState<Product|null>(null);const [cart,setCart]=useState<Product[]>([]);const [favorites,setFavorites]=useState<number[]>([]);const [toast,setToast]=useState("");const [category,setCategory]=useState("All");const [color,setColor]=useState("Forest Green");useEffect(()=>{const t=setInterval(()=>setSlide(s=>(s+1)%3),6000);return()=>clearInterval(t)},[]);useEffect(()=>{if(!toast)return;const t=setTimeout(()=>setToast(""),2400);return()=>clearTimeout(t)},[toast]);useEffect(()=>{document.body.style.overflow=selected?"hidden":"";return()=>{document.body.style.overflow=""}},[selected]);const shown=useMemo(()=>category==="All"?products:products.filter(p=>p.category===category),[category]);const add=(p:Product)=>{setCart(c=>[...c,p]);setSelected(null);setToast(`${p.name} added to your bag`)};return <div className="site-shell shop-page"><header className="site-header"><button className="brand-mark" onClick={()=>navigate("/")}><span>KOSH</span><em>Imperial</em></button><nav className="desktop-nav"><button onClick={()=>navigate("/shop")}>Shop</button><button onClick={()=>navigate("/collections")}>Collections</button><button onClick={()=>navigate("/#values")}>Sustainability</button><button onClick={()=>navigate("/#story")}>Our story</button><button onClick={()=>navigate("/#journal")}>Journal</button></nav><div className="header-actions"><button className="icon-button" onClick={()=>setToast("Search is ready in the next release")}><Search size={20}/></button><button className="bag-button" onClick={()=>setToast(cart.length?`${cart.length} items in your bag`:"Your bag is empty")}><ShoppingBag size={19}/>{cart.length>0&&<span>{cart.length}</span>}</button></div></header><main>
-<section className="shop-hero" style={{backgroundImage:`linear-gradient(90deg,rgba(15,36,23,.86),rgba(15,36,23,.18)),url(${slides[slide].img})`}}><div><p className="eyebrow">{slides[slide].badge}</p><h1>{slides[slide].title}</h1><p>{slides[slide].sub}</p><button className="light-button" onClick={()=>document.querySelector("#collection")?.scrollIntoView({behavior:"smooth"})}>{slides[slide].cta} <ArrowRight size={16}/></button></div><div className="shop-slider-controls"><button onClick={()=>setSlide((slide+2)%3)}><ChevronLeft size={18}/></button><div>{slides.map((s,i)=><button key={s.badge} className={i===slide?"active":""} onClick={()=>setSlide(i)}/>)}</div><button onClick={()=>setSlide((slide+1)%3)}><ChevronRight size={18}/></button></div></section>
-<section className="occasion-section"><div className="section-intro centered-intro"><p className="kicker">FOR MOMENTS THAT MATTER</p><h2>Perfect for every occasion</h2><p>Give something that keeps giving — a considered object with a gentler footprint.</p></div><div className="occasion-grid">{[{title:"Birthdays",text:"A meaningful gift they’ll cherish.",img:"https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=800&q=85"},{title:"Anniversaries",text:"Celebrate love with something that lasts.",img:"https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=85"},{title:"Graduation",text:"For new beginnings and big dreams.",img:"https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=85"},{title:"Corporate gifting",text:"Purposeful gifting that leaves a lasting impression.",img:"https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=800&q=85"},{title:"Festivals",text:"Thoughtful choices for every celebration.",img:"https://images.unsplash.com/photo-1518002171953-a080ee817e1f?auto=format&fit=crop&w=800&q=85"}].map(o=><button className="occasion-card" key={o.title} onClick={()=>{setCategory(o.title==="Corporate gifting"?"Accessories":"Wallets");document.querySelector("#collection")?.scrollIntoView({behavior:"smooth"})}}><div><strong>{o.title}</strong><p>{o.text}</p></div><img src={o.img} alt=""/></button>)}</div></section>
+const slides = [
+  {
+    badge: "Eco-friendly wallets",
+    title: "The life of a wallet.",
+    sub: "Thoughtfully designed for today. Made to return to nature.",
+    cta: "Explore Collection",
+    img: shopImages.slide1,
+  },
+  {
+    badge: "100% Plantable Bio-Leather",
+    title: "Made from nature. Return to nature.",
+    sub: "Crafted using natural fibers and plantable material that honors the earth.",
+    cta: "Our Materials",
+    img: shopImages.slide2,
+  },
+  {
+    badge: "Artisanal Craftsmanship",
+    title: "Thoughtful in every stitch.",
+    sub: "Handcrafted by third-generation artisans who care in every detail.",
+    cta: "Our Craft",
+    img: shopImages.slide3,
+  },
+];export default function Shop(){const [,navigate]=useLocation();const [slide,setSlide]=useState(0);const [selected,setSelected]=useState<Product|null>(null);const [cart,setCart]=useState<Product[]>([]);const [favorites,setFavorites]=useState<number[]>([]);const [toast,setToast]=useState("");const [category,setCategory]=useState("All");const [color,setColor]=useState("Forest Green");useEffect(()=>{const t=setInterval(()=>setSlide(s=>(s+1)%3),6000);return()=>clearInterval(t)},[]);useEffect(()=>{if(!toast)return;const t=setTimeout(()=>setToast(""),2400);return()=>clearTimeout(t)},[toast]);useEffect(()=>{document.body.style.overflow=selected?"hidden":"";return()=>{document.body.style.overflow=""}},[selected]);const shown=useMemo(()=>category==="All"?products:products.filter(p=>p.category===category),[category]);const add=(p:Product)=>{setCart(c=>[...c,p]);setSelected(null);setToast(`${p.name} added to your bag`)};return <div className="site-shell shop-page"><header className="site-header"><button className="brand-mark" onClick={()=>navigate("/")}><span>KOSH</span><em>Imperial</em></button><nav className="desktop-nav"><button onClick={()=>navigate("/shop")}>Shop</button><button onClick={()=>navigate("/collections")}>Collections</button><button onClick={()=>navigate("/#values")}>Sustainability</button><button onClick={()=>navigate("/#story")}>Our story</button><button onClick={()=>navigate("/#journal")}>Journal</button></nav><div className="header-actions"><button className="icon-button" onClick={()=>setToast("Search is ready in the next release")}><Search size={20}/></button><button className="bag-button" onClick={()=>setToast(cart.length?`${cart.length} items in your bag`:"Your bag is empty")}><ShoppingBag size={19}/>{cart.length>0&&<span>{cart.length}</span>}</button></div></header><main>
+<section
+  className="shop-hero"
+  style={{
+    backgroundImage: `linear-gradient(
+      90deg,
+      rgba(15, 36, 23, 0.86),
+      rgba(15, 36, 23, 0.18)
+    ), url("${slides[slide].img}")`,
+  }}
+>
+  <div>
+    <p className="eyebrow">
+      {slides[slide].badge}
+    </p>
+
+    <h1>
+      {slides[slide].title}
+    </h1>
+
+    <p>
+      {slides[slide].sub}
+    </p>
+
+    <button
+      className="light-button"
+      onClick={() =>
+        document
+          .querySelector("#collection")
+          ?.scrollIntoView({ behavior: "smooth" })
+      }
+    >
+      {slides[slide].cta} <ArrowRight size={16} />
+    </button>
+  </div>
+
+  <div className="shop-slider-controls">
+    <button
+      onClick={() => setSlide((slide + 2) % 3)}
+    >
+      <ChevronLeft size={18} />
+    </button>
+
+    <div>
+      {slides.map((s, i) => (
+        <button
+          key={s.badge}
+          className={i === slide ? "active" : ""}
+          onClick={() => setSlide(i)}
+        />
+      ))}
+    </div>
+
+    <button
+      onClick={() => setSlide((slide + 1) % 3)}
+    >
+      <ChevronRight size={18} />
+    </button>
+  </div>
+</section><section className="occasion-section"><div className="section-intro centered-intro"><p className="kicker">FOR MOMENTS THAT MATTER</p><h2>Perfect for every occasion</h2><p>Give something that keeps giving — a considered object with a gentler footprint.</p></div><div className="occasion-grid">{[{title:"Birthdays",text:"A meaningful gift they’ll cherish.",img:"https://images.unsplash.com/photo-1512909006721-3d6018887383?auto=format&fit=crop&w=800&q=85"},{title:"Anniversaries",text:"Celebrate love with something that lasts.",img:"https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=800&q=85"},{title:"Graduation",text:"For new beginnings and big dreams.",img:"https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=85"},{title:"Corporate gifting",text:"Purposeful gifting that leaves a lasting impression.",img:"https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=800&q=85"},{title:"Festivals",text:"Thoughtful choices for every celebration.",img:"https://images.unsplash.com/photo-1518002171953-a080ee817e1f?auto=format&fit=crop&w=800&q=85"}].map(o=><button className="occasion-card" key={o.title} onClick={()=>{setCategory(o.title==="Corporate gifting"?"Accessories":"Wallets");document.querySelector("#collection")?.scrollIntoView({behavior:"smooth"})}}><div><strong>{o.title}</strong><p>{o.text}</p></div><img src={o.img} alt=""/></button>)}</div></section>
 <section className="shop-section" id="collection"><div className="section-heading-row"><div><p className="kicker">THE COLLECTION</p><h2>Find your everyday essential.</h2></div><div className="category-tabs">{["All","Wallets","Essentials","Travel","Accessories"].map(c=><button className={category===c?"active":""} key={c} onClick={()=>setCategory(c)}>{c}</button>)}</div></div><div className="product-grid shop-product-grid">{shown.map(p=><article className="product-card" key={p.id}><div className="product-image-wrap" onClick={()=>setSelected(p)}><img src={p.image} alt={p.name}/>{p.id<4&&<span className="best-badge">Best seller</span>}<button className={`favorite-button ${favorites.includes(p.id)?"is-favorite":""}`} onClick={e=>{e.stopPropagation();setFavorites(f=>f.includes(p.id)?f.filter(x=>x!==p.id):[...f,p.id])}}><Heart size={18} fill={favorites.includes(p.id)?"currentColor":"none"}/></button></div><div className="product-meta"><div><h3>{p.name}</h3><p>{p.note}</p></div><strong>{price(p.price)} <del>{price(p.original||p.price)}</del></strong></div><button className="quick-add" onClick={()=>setSelected(p)}>Quick add <Plus size={16}/></button></article>)}</div></section>
 <section className="most-bought-section"><div className="most-bought-copy"><p className="kicker sage-kicker">MOST BOUGHT THIS MONTH</p><h2>Objects with<br/><em>a following.</em></h2><p>Four of the pieces our community keeps coming back to — made slowly, carried daily.</p><button className="light-button" onClick={()=>setSelected(products[0])}>View details <ArrowRight size={16}/></button></div><div className="most-bought-card"><img src={products[0].image} alt={products[0].name}/><div><h3>KOSH Bi-Fold Wallet</h3><p>Classic form. Timeless utility.</p><strong>{price(products[0].price)}</strong><span className="rating">★ 4.8 / 128 reviews</span><div className="swatches"><button className="green" onClick={()=>setColor("Forest Green")} /><button className="brown" onClick={()=>setColor("Saddle Brown")} /><button className="black" onClick={()=>setColor("Onyx Black")} /><small>{color}</small></div><button className="add-button" onClick={()=>add(products[0])}>Add to bag <ArrowRight size={16}/></button></div></div></section>
-<section className="plant-section"><div className="plant-copy"><p className="kicker">ZERO WASTE LIFE CYCLE</p><h2>What happens<br/><em>after use?</em></h2><p>When your wallet has served you well, it can return to the earth and grow into something new.</p><div className="life-cycle"><span>1. Carry</span><ArrowRight size={14}/><span>2. Use</span><ArrowRight size={14}/><span>3. Retire</span><ArrowRight size={14}/><span>4. Plant</span><ArrowRight size={14}/><span>5. Grow</span></div><div className="plant-badge"><Sprout size={17}/>100% biodegradable & plantable.<br/>Zero microplastics. Seeds embedded.</div><button className="light-button dark-light-button" onClick={()=>setToast("Planting guide coming soon")}>Learn more about planting <ArrowRight size={16}/></button></div><div className="plant-image" style={{backgroundImage:"linear-gradient(90deg,rgba(28,37,28,.35),rgba(28,37,28,.03)),url(https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1400&q=88)"}}/></section>
+<section className="plant-section"><div className="plant-copy"><p className="kicker">ZERO WASTE LIFE CYCLE</p><h2>What happens<br/><em>after use?</em></h2><p>When your wallet has served you well, it can return to the earth and grow into something new.</p><div className="life-cycle"><span>1. Carry</span><ArrowRight size={14}/><span>2. Use</span><ArrowRight size={14}/><span>3. Retire</span><ArrowRight size={14}/><span>4. Plant</span><ArrowRight size={14}/><span>5. Grow</span></div><div className="plant-badge"><Sprout size={17}/>100% biodegradable & plantable.<br/>Zero microplastics. Seeds embedded.</div><button className="light-button dark-light-button" onClick={()=>setToast("Planting guide coming soon")}>Learn more about planting <ArrowRight size={16}/></button></div><div
+  className="plant-image"
+  style={{
+    backgroundImage: `linear-gradient(
+      90deg,
+      rgba(28, 37, 28, 0.35),
+      rgba(28, 37, 28, 0.03)
+    ), url("${shopImages.plant}")`,
+  }}
+/></section>
 <section className="voices-section"><div className="testimonial"><p className="kicker">WHAT OUR CUSTOMERS SAY</p><span className="quote-mark">“</span><blockquote>Beautifully crafted and the planting concept is just brilliant. Love the quality and purpose behind it.</blockquote><div className="reviewer"><span className="avatar">AM</span><div><strong>Ananya Mehta</strong><p>★★★★★ &nbsp; Verified buyer</p></div></div></div><div className="faq"><p className="kicker">GOOD QUESTIONS</p><h2>Frequently asked questions</h2>{["What is the wallet made of?","How does the planting process work?","How durable is the wallet?","How should I care for my wallet?","Do you ship internationally?","What is your return policy?"].map(q=><button key={q} onClick={()=>setToast("We’ll share the answer in your inbox soon")}><span>{q}</span><Plus size={15}/></button>)}</div></section>
 <section className="trust-bar"><div><Leaf size={22}/><b>Carbon-neutral shipping</b><span>Lower impact, every mile.</span></div><div><Sprout size={22}/><b>Plastic-free packaging</b><span>Thoughtful from the start.</span></div><div><Target size={22}/><b>7-day easy returns</b><span>Keep what feels right.</span></div><div><Heart size={22}/><b>Seed card guarantee</b><span>More life, less waste.</span></div></section></main><footer className="site-footer"><div className="footer-bottom"><span>© 2026 KOSH Imperial</span><button onClick={()=>navigate("/")}>Back to KOSH home <ArrowRight size={14}/></button></div></footer>
 {selected&&<div className="overlay" onMouseDown={e=>{if(e.target===e.currentTarget)setSelected(null)}}><div className="product-dialog"><button className="dialog-close" onClick={()=>setSelected(null)}><X size={20}/></button><div className="dialog-image"><img src={selected.image} alt={selected.name}/><span className="dialog-tag">Plantable material</span></div><div className="dialog-details"><p className="kicker">{selected.category} / KOSH IMPERIAL</p><h2>KOSH {selected.name}</h2><div className="dialog-price">{price(selected.price)}</div><p>{selected.details}</p><div className="dialog-rule"/><div className="dialog-facts"><span><b>Material</b>Plantable blend</span><span><b>Finish</b>Hand-finished</span><span><b>Made in</b>India</span><span><b>Care</b>Wipe gently</span></div><button className="add-button" onClick={()=>add(selected)}>Add to bag <span>{price(selected.price)}</span></button></div></div></div>}{toast&&<div className="toast">{toast}</div>}</div>}
